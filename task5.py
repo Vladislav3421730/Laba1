@@ -27,7 +27,9 @@ def view_all_info():
         print(f'{item}: Материал - {description[0]}, Цена - {description[1]}, Количество - {description[2]}')
 
 def buy_product():
-    total_price = 0
+    ListOfProduct=list()
+    ListOfNums=list()
+    ListOfCost=list()
     while True:
         item = input("Введите название товара (или 'n' для завершения покупки): ")
         if item == 'n':
@@ -35,17 +37,24 @@ def buy_product():
         if item in jewelry_store:
             try:
                 quantity = int(input(f"Введите количество для покупки товара '{item}': "))
-                if 1 <= quantity <= jewelry_store[item][2]:
-                    total_price += jewelry_store[item][1] * quantity
-                    jewelry_store[item][2] -= quantity
+                if quantity>= jewelry_store[item][2]:
+                        print(f"Извините,  недостаточно товара '{item}' в магазине.")
                 else:
-                    print(f"Извините, недостаточно товара '{item}' в магазине.")
+                    if 1 > quantity:
+                        quantity = int(input("Введите нормальное количество товара : "))
+                    ListOfProduct.append(item)
+                    ListOfNums.append(quantity)
+                    ListOfCost.append(jewelry_store[item][1]*quantity)
+                    jewelry_store[item][2] -= quantity
             except ValueError:
                 print("Пожалуйста, введите корректное количество.")
         else:
             print("Такого товара нет в магазине.")
-    print(f"Сумма вашей покупки: {total_price} руб.")
-
+    if(sum(ListOfCost)):
+            print("Ваш чек")
+            for product,num,cost in zip(ListOfProduct,ListOfNums,ListOfCost):
+                    print(f"{product},{num} штук. , за всё : {cost}")
+            print(f"Общая сумма покупки : {sum(ListOfCost)}")
 def add_item():
     item = input("Введите название нового товара: ")
     if item in jewelry_store:
